@@ -8,7 +8,7 @@ export default function CollectionPage() {
   const [items, setItems] = useState([]);
   const [state, setState] = useState("loading"); // "loading" | "ready" | "anon" | "error"
   const [selected, setSelected] = useState(null);
-  
+
   useEffect(() => {
     let cancelled = false;
 
@@ -93,7 +93,7 @@ export default function CollectionPage() {
     );
   }
 
-  
+
   return (
     <main className="max-w-screen-xl mx-auto px-6 pt-12 pb-24" style={{ fontFamily: '"Playfair Display", serif' }}>
       <div className="grid grid-cols-1 sm:grid-cols-[1fr,180px] gap-8">
@@ -154,30 +154,28 @@ export default function CollectionPage() {
 
         {/* Right-side floating Add (noticeable) */}
         {state === "ready" && (
-        <button
-          onClick={() => setSelected({ isNew: true })}
-          aria-label="Add item"
-          className="
-            fixed bottom-6 z-30
-            right-[max(1rem,calc((100vw-1280px)/2+1.5rem))]
-            sm:right-[max(1.25rem,calc((100vw-1280px)/2+2rem))]
-            inline-flex items-center gap-3 px-5 py-4 rounded-full
-            shadow-2xl border border-neutral-900/70
-            bg-gradient-to-r from-neutral-900 to-neutral-700 text-white
-            hover:from-white hover:to-white hover:text-neutral-900
-            transition transform hover:scale-105 active:scale-95
-            focus:outline-none focus-visible:ring-4 focus-visible:ring-neutral-900/30
-            backdrop-blur
-          "
-        >
-          <span aria-hidden="true" className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-amber-400" />
-          <span aria-hidden="true" className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-amber-400 animate-ping" />
-          <span className="flex items-center justify-center w-8 h-8 rounded-full border border-white/30 text-xl leading-none">＋</span>
-          <span className="font-semibold tracking-wide">Add item</span>
-        </button>
+          <button
+            onClick={() => setSelected({ isNew: true })}
+            aria-label="Add item"
+            className=" fixed bottom-6 z-0
+             right-[max(1rem,calc((100vw-1280px)/2+2.2rem))]
+             m:right-[max(1.25rem,calc((100vw-1280px)/2+2rem))]
+             inline-flex items-center gap-3 px-5 py-4 rounded-full
+             shadow-2xl border border-neutral-900/70
+              bg-gradient-to-r from-neutral-900 to-neutral-700
+               text-white hover:from-white
+                hover:to-white hover:text-neutral-900
+                 transition transform hover:scale-105 active:scale-95
+                  focus:outline-none focus-visible:ring-4 focus-visible:ring-neutral-900/30 backdrop-blur "
+          >
+            <span aria-hidden="true" className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-amber-400" />
+            <span aria-hidden="true" className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-amber-400 animate-ping" />
+            <span className="flex items-center justify-center w-8 h-8 rounded-full border border-white/30 text-xl leading-none">＋</span>
+            <span className="font-semibold tracking-wide">Add item</span>
+          </button>
         )}
       </div>
-      
+
 
 
       {selected && (

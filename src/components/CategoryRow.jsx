@@ -42,7 +42,7 @@ export default function CategoryRow({ label, items, onSelect }) {
         role="region"
         aria-label={`${label} items`}
         className="overflow-x-auto scroll-smooth snap-x snap-mandatory no-scrollbar
-          overscroll-x-contain
+          overscroll-x-contain px-10
         "
       >
         <div className="flex gap-4 pr-8">
@@ -71,7 +71,7 @@ export default function CategoryRow({ label, items, onSelect }) {
         onClick={() => scrollByDir(-1)}
         disabled={atStart}
         aria-label={`Scroll ${label} left`}
-        className="absolute left-2 top-1/2 -translate-y-1/2 z-10
+        className="absolute -left-10 top-1/2 -translate-y-1/2 z-10
                    rounded-full border bg-white/90 backdrop-blur px-3 py-2
                    shadow-md hover:bg-white disabled:opacity-40"
       >
@@ -82,7 +82,7 @@ export default function CategoryRow({ label, items, onSelect }) {
         onClick={() => scrollByDir(1)}
         disabled={atEnd}
         aria-label={`Scroll ${label} right`}
-        className="absolute right-2 top-1/2 -translate-y-1/2 z-10
+        className="absolute -right-10 top-1/2 -translate-y-1/2 z-10
                    rounded-full border bg-white/90 backdrop-blur px-3 py-2
                    shadow-md hover:bg-white disabled:opacity-40"
       >
