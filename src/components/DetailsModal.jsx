@@ -7,9 +7,6 @@ export default function DetailsModal({ item, onClose, onCreated, onUpdated, onDe
   
   const isNew = item?.isNew;
   const [isEditing, setIsEditing] = useState(isNew ? true : false);
-
-  
-
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState("");
 

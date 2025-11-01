@@ -1,22 +1,23 @@
 // components/ItemCard.jsx
 import React from "react";
 
-const ItemCard = ({ item, variant = "default", onClick  }) => {
+const ItemCard = ({ item, variant = "default", onClick }) => {
   const clickable = typeof onClick === "function";
   const mono = variant === "mono";
 
   // --- map both shapes (DB + old JSON) ---
   const imageUrl = item.image_url || item.image || null;   // API should attach image_url
-  const title    = item.title || item.name || "Untitled";
-  const brand    = item.brand || null;
+  const title = item.title || item.name || "Untitled";
+  const brand = item.brand || null;
+  const typeLabel = item.type_label || item?.type?.label || null;
   const category = item.category || "";
   const colorHex = item.color_hex || item?.color?.hex || null;
   const colorName = item?.color?.name || null;
-  const season   = item.season || null;
+  const season = item.season || null;
 
   return (
     <article
-     role={clickable ? "button" : undefined}
+      role={clickable ? "button" : undefined}
       tabIndex={clickable ? 0 : undefined}
       onClick={onClick}
       onKeyDown={(e) => { if (clickable && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); onClick(); } }}
@@ -51,10 +52,22 @@ const ItemCard = ({ item, variant = "default", onClick  }) => {
       {/* Content */}
       <div className="space-y-1 p-4">
         <h3 className="truncate text-base font-semibold text-gray-900">{title}</h3>
-        <p className="text-sm text-gray-600">{category}</p>
+        <p className="text-sm text-gray-600">{typeLabel}</p>
 
         {/* Meta row */}
+
         <div className="mt-2 flex flex-wrap items-center gap-2">
+          {colorHex && (
+            <div
+              className="h-6 w-6 rounded-md border border-white/30 backdrop-blur-sm shadow-md"
+              style={{
+                backgroundColor: colorHex,
+                boxShadow: `0 2px 6px ${colorHex}55`,
+              }}
+              title={colorHex}
+            />
+          )}
+
           {brand && (
             <span
               className={
@@ -67,34 +80,8 @@ const ItemCard = ({ item, variant = "default", onClick  }) => {
             </span>
           )}
 
-          {season && (
-            <span
-              className={
-                mono
-                  ? "rounded-none bg-white px-2.5 py-1 text-xs font-medium text-neutral-700 border border-neutral-200"
-                  : "rounded-full bg-pink-50 px-2.5 py-1 text-xs font-medium text-pink-700 ring-1 ring-pink-100"
-              }
-            >
-              {season}
-            </span>
-          )}
 
-          {(colorHex || colorName) && (
-            <span
-              className={
-                mono
-                  ? "inline-flex items-center gap-2 rounded-none bg-white px-2.5 py-1 text-xs font-medium text-neutral-700 border border-neutral-200"
-                  : "inline-flex items-center gap-2 rounded-full bg-white px-2.5 py-1 text-xs font-medium text-gray-700 ring-1 ring-gray-200"
-              }
-            >
-              <span
-                className="inline-block h-3 w-3 rounded-full ring-1 ring-black/10"
-                style={{ backgroundColor: colorHex || "#eee" }}
-                aria-hidden
-              />
-              {colorName || colorHex}
-            </span>
-          )}
+
         </div>
       </div>
     </article>

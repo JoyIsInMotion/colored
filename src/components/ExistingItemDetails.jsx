@@ -4,17 +4,18 @@ import { formatPrice, formatDateLong } from "./formatters";
 
 export default function ExistingItemDetails({ item }) {
   // normalize the data so both DB shape and old mock shape work
-  const title       = item.title || item.name || "Item";
-  const imageUrl    = item.image_url || item.image || null;
-  const brand       = item.brand || "";
-  const category    = item.category || "";
-  const colorHex    = item.color_hex || item?.color?.hex || null;
-  const colorName   = item?.color?.name || item.color || null;
-  const season      = item.season || "";
-  const size        = item.size ?? item.size_label ?? "";
-  const price       = item.price ?? item.cost ?? "";
+  const title = item.title || item.name || "Item";
+  const imageUrl = item.image_url || item.image || null;
+  const brand = item.brand || "";
+  const category = item.category || "";
+  const colorHex = item.color_hex || item?.color?.hex || null;
+  const colorName = item?.color?.name || item.color || null;
+  const season = item.season || "";
+  const size = item.size ?? item.size_label ?? "";
+  const price = item.price ?? item.cost ?? "";
   const purchasedAt = item.purchased_at ?? item.purchaseDate ?? "";
-  const notes       = item.notes ?? "";
+  const notes = item.notes ?? "";
+  const typeLabel = item.type_label || item?.type?.label || "";
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-6 p-4">
@@ -35,16 +36,17 @@ export default function ExistingItemDetails({ item }) {
 
       {/* Right: data */}
       <div className="space-y-3">
-        <FieldRow label="Brand"      value={brand} />
-        <FieldRow label="Category"   value={category} />
+        {typeLabel && <FieldRow label="Type" value={typeLabel} />}
+        <FieldRow label="Brand" value={brand} />
+        <FieldRow label="Category" value={category} />
         <FieldRow
           label="Color"
-          value={colorName || colorHex}
+          value={colorName  ||""}
           swatch={colorHex}
         />
-        <FieldRow label="Season"     value={season} />
-        <FieldRow label="Size"       value={size} />
-        <FieldRow label="Price"      value={formatPrice(price)} />
+        <FieldRow label="Season" value={season} />
+        <FieldRow label="Size" value={size} />
+        <FieldRow label="Price" value={formatPrice(price)} />
         <FieldRow
           label="Purchased"
           value={formatDateLong(purchasedAt)}
