@@ -100,9 +100,12 @@ export type Database = {
           color_hex: string | null
           cover_path: string | null
           created_at: string
+          cutout_path: string | null
           id: string
+          image_processing_status: string
           is_public: boolean
           notes: string | null
+          original_path: string | null
           price: number | null
           purchase_date: string | null
           season: string | null
@@ -117,9 +120,12 @@ export type Database = {
           color_hex?: string | null
           cover_path?: string | null
           created_at?: string
+          cutout_path?: string | null
           id?: string
+          image_processing_status?: string
           is_public?: boolean
           notes?: string | null
+          original_path?: string | null
           price?: number | null
           purchase_date?: string | null
           season?: string | null
@@ -134,9 +140,12 @@ export type Database = {
           color_hex?: string | null
           cover_path?: string | null
           created_at?: string
+          cutout_path?: string | null
           id?: string
+          image_processing_status?: string
           is_public?: boolean
           notes?: string | null
+          original_path?: string | null
           price?: number | null
           purchase_date?: string | null
           season?: string | null

@@ -27,7 +27,11 @@ async function signUrl(cover_path?: string | null, expiresIn = 3600) {
 }
 
 async function enrichItem(it: ItemRow): Promise<ItemView> {
-  const image_url = await signUrl(it.cover_path);
+  const path =
+    it.cutout_path || // new processed image
+    it.cover_path ||  // legacy
+    it.original_path; // worst case
+  const image_url = await signUrl(path);
 
   let type_label: string | null = null;
   if (it.type_id) {

@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { supabase } from "../lib/supabase";
-import { 
+import {
   createItem,
   updateItem,
   uploadWardrobeImage,
   listItemTypes,
   CATEGORIES
- } from "../api/items";
+} from "../api/items";
 
 export default function AddItemForm({ onClose, onCreated, onUpdated, initialItem }) {
   const [form, setForm] = useState({
@@ -96,13 +96,31 @@ export default function AddItemForm({ onClose, onCreated, onUpdated, initialItem
     }
 
     try {
-      let cover_path = initialItem?.cover_path || null;
+      // Start with existing paths if editing
+      let original_path =
+        initialItem?.original_path ||
+        initialItem?.cover_path ||
+        null;
 
-      // ⬇️ Upload image if chosen
+      let cutout_path =
+        initialItem?.cutout_path ||
+        initialItem?.cover_path ||
+        null;
+
+      let image_processing_status =
+        initialItem?.image_processing_status || "ready";
+
+      // ⬇️ Upload new image if chosen
       if (file) {
-        cover_path = await uploadWardrobeImage(user.id, file);
-      }
+        const uploadedPath = await uploadWardrobeImage(user.id, file);
 
+        // For now: original and cutout are the same file
+        // Later (when AI processing is added), you’ll set
+        // image_processing_status = "pending" and cutout_path = null
+        original_path = uploadedPath;
+        cutout_path = uploadedPath;
+        image_processing_status = "ready";
+      }
 
       const payload = {
         user_id: user.id,
@@ -117,7 +135,12 @@ export default function AddItemForm({ onClose, onCreated, onUpdated, initialItem
         notes: form.notes || null,
         season: form.season || "all",
         is_public: form.is_public,
-        cover_path,
+
+        // 🆕 Image fields
+        cover_path: cutout_path, // keep legacy in sync
+        original_path,
+        cutout_path,
+        image_processing_status,
       };
 
       let saved;
@@ -190,7 +213,7 @@ export default function AddItemForm({ onClose, onCreated, onUpdated, initialItem
           </select>
         </div>
       </div>
-       {/* Type + Season */}
+      {/* Type + Season */}
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="block text-xs text-neutral-500 mb-1">Type</label>
@@ -231,7 +254,7 @@ export default function AddItemForm({ onClose, onCreated, onUpdated, initialItem
         </div>
       </div>
 
-          
+
       {/* Color picker + Size */}
       <div className="grid grid-cols-2 gap-4">
         {/* Color block */}
