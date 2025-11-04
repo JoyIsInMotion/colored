@@ -7,6 +7,8 @@ import {
   listItemTypes,
   CATEGORIES
 } from "../api/items";
+import { processItemImage } from "../api/images";
+
 
 export default function AddItemForm({ onClose, onCreated, onUpdated, initialItem }) {
   const [form, setForm] = useState({
@@ -150,6 +152,13 @@ export default function AddItemForm({ onClose, onCreated, onUpdated, initialItem
       } else {
         saved = await createItem(user.id, payload);
         if (onCreated) onCreated(saved);
+        // 🔹 trigger image processing stub
+        try {
+          await processItemImage(saved.id, original_path);
+        } catch (e) {
+          console.error("Processing failed", e);
+        }
+
       }
 
       setSaving(false);
