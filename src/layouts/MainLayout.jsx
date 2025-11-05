@@ -2,6 +2,7 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer"
 
 export default function MainLayout() {
   return (
@@ -25,6 +26,7 @@ export default function MainLayout() {
       <main className="max-w-screen-xl mx-auto px-6 py-8">
         <Outlet />
       </main>
+        <Footer />
     </div>
   );
 }
