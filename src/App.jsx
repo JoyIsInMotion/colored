@@ -7,6 +7,7 @@ import { Route, createRoutesFromElements, createBrowserRouter, RouterProvider } 
 import { supabase } from './lib/supabase';
 import AuthPage from "./pages/AuthPage";
 import { useEffect } from "react";
+
 //import "./events.css"; //
 
 
