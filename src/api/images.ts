@@ -1,46 +1,36 @@
-// src/api/images.ts
 import { supabase } from "../lib/supabase";
-import { updateItem } from "./items";
 
-/**
- * Trigger background removal for an item's image via Edge Function.
- * The Edge Function:
- *  - reads the item from Supabase
- *  - downloads original image from Storage
- *  - calls bg-service on port 9000
- *  - uploads cutout and updates DB (cutout_path, cover_path, status)
- */
-export async function processItemImage(
-  itemId: string,
-  originalPath: string | null
-) {
+export async function processItemImage(itemId: string, originalPath: string | null) {
   if (!originalPath) return;
 
-  try {
-    // Optional: optimistically mark as "processing" in DB or UI
-    await updateItem(itemId, { image_processing_status: "processing" });
+  const isLocal = window.location.hostname === "localhost";
+  const fnUrl = isLocal
+    ? "http://127.0.0.1:54321/functions/v1/process-item-image"
+    : `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/process-item-image`;
 
-    const { error } = await supabase.functions.invoke("process-item-image", {
-      body: { itemId },
+  console.log("processItemImage ->", fnUrl, itemId);
+
+  try {
+    const res = await fetch(fnUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ itemId }),
     });
 
-    if (error) {
-      console.error("process-item-image function error", error);
-      // Optional: mark as failed or back to ready
-      await updateItem(itemId, {
-        image_processing_status: "ready",
-      });
+    console.log("processItemImage response:", res.status, res.statusText);
+    const text = await res.text();
+    console.log("processItemImage response:", res.status, text);
+
+    //  Wait/poll for a short while to let the backend finish writing the new image
+    for (let attempt = 0; attempt < 5; attempt++) {
+      console.log(` Waiting for image update... (${attempt + 1}/5)`);
+      await new Promise((resolve) => setTimeout(resolve, 1000)); // 1 second delay
     }
 
-    // No need to manually write cutout/cover paths here:
-    // the Edge Function already updates the DB row.
-  } catch (err) {
-    console.error("Error calling process-item-image", err);
-    // Fallback: make sure the item isn't stuck in "processing"
-    try {
-      await updateItem(itemId, { image_processing_status: "ready" });
-    } catch {
-      // ignore
-    }
+    console.log("✅ Done waiting, likely updated now.");
+  } catch (e) {
+    console.error("processItemImage failed:", e);
   }
 }

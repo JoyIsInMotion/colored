@@ -40,3 +40,7 @@ async def remove_background_endpoint(file: UploadFile = File(...)):
         raise HTTPException(status_code=500, detail=f"Background removal failed: {e}")
 
     return Response(content=result_png, media_type="image/png")
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("main:app", host="0.0.0.0", port=9000)
