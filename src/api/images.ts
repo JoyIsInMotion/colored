@@ -24,9 +24,14 @@ export async function processItemImage(itemId: string, originalPath: string | nu
     console.log("processItemImage response:", res.status, text);
 
     //  Wait/poll for a short while to let the backend finish writing the new image
-    for (let attempt = 0; attempt < 5; attempt++) {
-      console.log(` Waiting for image update... (${attempt + 1}/5)`);
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // 1 second delay
+
+    // ⚡ Faster wait: ~2 seconds total instead of 5
+    const ATTEMPTS = 1
+    const DELAY_MS =300;
+
+    for (let attempt = 0; attempt < ATTEMPTS; attempt++) {
+      console.log(` Waiting for image update... (${attempt + 1}/${ATTEMPTS})`);
+      await new Promise((resolve) => setTimeout(resolve, DELAY_MS));
     }
 
     console.log("✅ Done waiting, likely updated now.");
