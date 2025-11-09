@@ -152,24 +152,11 @@ export default function AddItemForm({ onClose, onCreated, onUpdated, initialItem
       } else {
         saved = await createItem(user.id, payload);
         if (onCreated) onCreated(saved);
-        // 🔹 trigger image processing stub
-        try {
-          await processItemImage(saved.id, original_path);
-        } catch (e) {
-          console.error("Processing failed", e);
-        }
 
-      }
-
-      setSaving(false);
-      onClose();
-    } catch (err) {
-      console.error(err);
-      setSaving(false);
-      setErrorMsg("Could not save item.");
-    }
+        try { await processItemImage(saved.id, original_path); await new Promise(r => setTimeout(r, 1500)); if (previewUrl) { setPreviewUrl(prev => prev + "?t=" + Date.now()); } const { data: updatedItem } = await supabase.from("items").select("*").eq("id", saved.id).single(); console.log("Updated item from Supabase:", updatedItem); if (updatedItem) { const { enrichItem } = await import("../api/items"); const view = await enrichItem(updatedItem); if (onUpdated) onUpdated(view); } } catch (e) { console.error("Processing failed", e); }
+      } setSaving(false); onClose();
+    } catch (err) { console.error(err); setSaving(false); setErrorMsg("Could not save item."); }
   }
-
   return (
     <form onSubmit={handleSubmit} className="p-4 space-y-4">
       {/* Title */}

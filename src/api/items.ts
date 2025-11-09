@@ -1,4 +1,3 @@
-// src/api/items.ts
 import { supabase } from "../lib/supabase";
 import type { Database } from "../types/database";
 
@@ -6,32 +5,37 @@ type ItemRow     = Database["public"]["Tables"]["items"]["Row"];
 type ItemInsert  = Database["public"]["Tables"]["items"]["Insert"];
 type ItemCategory = Database["public"]["Enums"]["item_category"];
 
-
 type ItemTypeRow  = Database["public"]["Tables"]["item_types"]["Row"];
 type ItemTypeAliasRow = Database["public"]["Tables"]["item_type_aliases"]["Row"];
-
 
 export type ItemView = ItemRow & {
   image_url?: string | null;
   type_label?: string | null; 
   category_label?: string | null;
 };
-async function signUrl(cover_path?: string | null, expiresIn = 3600) {
-  if (!cover_path) return null;
-  const { data, error } = await supabase
-    .storage
+
+
+
+async function buildImageUrl(it: ItemRow, expiresIn = 3600): Promise<string | null> {
+  const path = it.cutout_path || it.cover_path || it.original_path;
+  if (!path) return null;
+
+  const { data, error } = await supabase.storage
     .from("wardrobe")
-    .createSignedUrl(cover_path, expiresIn);
-  if (error) return null;
-  return data?.signedUrl ?? null;
+    .createSignedUrl(path, expiresIn);
+
+  if (error || !data?.signedUrl) {
+    console.error("createSignedUrl failed", error);
+    return null;
+  }
+
+  // bust cache each time we refresh the item
+  const freshUrl = data.signedUrl + `&cb=${Date.now()}`;
+  return freshUrl;
 }
 
 async function enrichItem(it: ItemRow): Promise<ItemView> {
-  const path =
-    it.cutout_path || // new processed image
-    it.cover_path ||  // legacy
-    it.original_path; // worst case
-  const image_url = await signUrl(path);
+  const image_url = await buildImageUrl(it);
 
   let type_label: string | null = null;
   if (it.type_id) {
@@ -97,8 +101,6 @@ export async function updateItem(
   itemId: string,
   patch: Partial<ItemInsert>
 ): Promise<ItemView> {
-
-
   const { data, error } = await supabase
     .from("items")
     .update(patch)
@@ -116,8 +118,9 @@ export async function deleteItem(itemId: string): Promise<void> {
 }
 
 export const CATEGORIES: ItemCategory[] = [
-  "top","bottom","dress","outerwear","shoes","bag","accessory","beauty","other",
+  "top","bottom","dress","outerwear","shoes","accessory","other",
 ];
+
 export async function listItemTypes(category?: ItemCategory): Promise<ItemTypeRow[]> {
   let query = supabase.from("item_types").select("*").order("sort");
   if (category) query = query.eq("category_slug", category);
@@ -139,3 +142,4 @@ export async function resolveTypeByAlias(alias: string): Promise<ItemTypeRow | n
   if (error || !data?.item_types) return null;
   return data.item_types as ItemTypeRow;
 }
+export { enrichItem };
