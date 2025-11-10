@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import io
 from typing import Tuple
 import numpy as np
@@ -5,12 +7,16 @@ import onnxruntime as ort
 from PIL import  Image, ImageFilter, ImageChops
 import cv2
 
+
+
 CANVAS_SIZE = (1024, 1024)
 SHADOW_STYLE = "magazine"  # "magazine", "soft", "ground", "none"
 
 # Load the ONNX model once at startup
+MODEL_PATH = Path(__file__).with_name("model.onnx")
+
 ORT_SESSION = ort.InferenceSession(
-    "model.onnx",
+    str(MODEL_PATH),
     providers=["CPUExecutionProvider"]
 )
 
