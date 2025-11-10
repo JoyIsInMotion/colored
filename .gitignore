@@ -31,3 +31,10 @@ ai/segmentation/outputs/
 
 __pycache__/
 *.pyc
+
+# Supabase local data
+supabase/.branches/
+supabase/.env
+
+# Local tests not for prod
+tests/
