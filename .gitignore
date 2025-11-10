@@ -28,3 +28,6 @@ ai/background_remover/model.onnx
 ai/segmentation/models/
 ai/segmentation/checkpoints/
 ai/segmentation/outputs/
+
+__pycache__/
+*.pyc
