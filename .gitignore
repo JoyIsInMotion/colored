@@ -35,6 +35,13 @@ __pycache__/
 # Supabase local data
 supabase/.branches/
 supabase/.env
+supabase/functions/**/*.env
+*.env
+supabase/.temp/
+
 
 # Local tests not for prod
 tests/
+
+# Python venv
+.venv/

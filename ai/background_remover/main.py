@@ -1,6 +1,6 @@
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.responses import Response
-from .trendyol_bg import remove_background
+from trendyol_bg import remove_background
 import onnxruntime as ort
 
 app = FastAPI()
