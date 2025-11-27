@@ -23,7 +23,25 @@ dist-ssr
 *.sln
 *.sw?
 
-# Python service
-bg-service/.venv/
-bg-service/__pycache__/
-bg-service/model.onnx
+# Local AI model weights (keep these OUT of git)
+ai/background_remover/model.onnx
+ai/segmentation/models/
+ai/segmentation/checkpoints/
+ai/segmentation/outputs/
+
+__pycache__/
+*.pyc
+
+# Supabase local data
+supabase/.branches/
+supabase/.env
+supabase/functions/**/*.env
+*.env
+supabase/.temp/
+
+
+# Local tests not for prod
+tests/
+
+# Python venv
+.venv/

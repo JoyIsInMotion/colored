@@ -1,7 +1,7 @@
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.responses import Response
-
 from trendyol_bg import remove_background
+import onnxruntime as ort
 
 app = FastAPI()
 
@@ -43,4 +43,4 @@ async def remove_background_endpoint(file: UploadFile = File(...)):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("main:app", host="0.0.0.0", port=9000)
+    uvicorn.run(app, host="0.0.0.0", port=9000)
